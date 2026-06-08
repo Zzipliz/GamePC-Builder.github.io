@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="description" content="GamePC Builder - Бесплатный конструктор игрового ПК. Подберите оптимальные комплектующие для любой игры!">
+    <meta name="keywords" content="сборка ПК, игровой компьютер, конструктор ПК, системные требования, игры, комплектующие">
+    <meta name="author" content="GamePC Builder">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:title" content="GamePC Builder - Конструктор игрового ПК">
+    <meta property="og:description" content="Собери идеальный игровой ПК под любую игру! Бесплатный онлайн-конструктор.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ВАШ_ЛОГИН.github.io">
+    
+    <title id="pageTitle">GamePC Builder — Сборка игрового ПК | Бесплатный конструктор</title>
+
+    <!-- Шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00e6;
+            --neon-purple: #b300ff;
+            --neon-green: #00ff88;
+            --neon-yellow: #ffcc00;
+            --accent: #00f3ff;
+            --accent-dark: #0088aa;
+            --accent-light: #88ffff;
+            --bg-dark: #0a0a0f;
+            --bg-card: #0d0d1a;
+            --bg-hover: #141428;
+            --border: #1a1a3a;
+            --text: #ffffff;
+            --text-muted: #8899aa;
+            --border-radius: 16px;
+            --card-shadow: none;
+            --transition-speed: 0.2s;
+            --font-size-base: 14px;
+            --spacing: 16px;
+            --glow-intensity: 1;
+            --glow-spread: 20px;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 80px;
+            font-size: var(--font-size-base);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent 50%, rgba(0, 243, 255, 0.02) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--accent);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 0 calc(30px * var(--glow-intensity)) rgba(0, 243, 255, 0.2);
+        }
+
+        .total-area {
+            text-align: center;
+        }
+
+        .total-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            text-shadow: 0 0 calc(5px * var(--glow-intensity)) var(--neon-cyan);
+        }
+
+        .total-price {
+            font-family: 'Orbitron', monospace;
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--neon-cyan), 
+                         0 0 calc(30px * var(--glow-intensity)) var(--neon-cyan);
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .total-price:hover {
+            transform: scale(1.05);
+        }
+
+        .total-price:active {
+            transform: scale(0.95);
+        }
+
+        .total-price small {
+            font-size: 14px;
+            font-weight: normal;
+            color: var(--neon-green);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .donate-btn {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            cursor: pointer;
+            color: #000;
+            font-weight: 700;
+            transition: all 0.15s;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        .donate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .donate-btn:active {
+            transform: scale(0.96);
+        }
+
+        .settings-btn {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--accent);
+            width: 48px;
+            height: 48px;
+            border-radius: 30px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--neon-cyan);
+            backdrop-filter: blur(4px);
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent);
+            transform: scale(0.96);
+        }
+
+        .settings-btn:active {
+            transform: scale(0.96);
+        }
+
+        .settings-dropdown {
+            position: fixed;
+            top: 80px;
+            right: 16px;
+            background: rgba(13, 13, 26, 0.99);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            width: 340px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 9999;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 0 calc(40px * var(--glow-intensity)) rgba(0, 243, 255, 0.5);
+        }
+        
+        .settings-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+        .settings-dropdown::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+        .settings-dropdown::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .settings-dropdown.open {
+            display: flex;
+            animation: fadeIn 0.2s;
+        }
+
+        .settings-section {
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            padding-bottom: 14px;
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .settings-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .settings-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.1s;
+        }
+
+        .color-option.active {
+            border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 calc(10px * var(--glow-intensity)) currentColor;
+        }
+
+        .color-option.cyan { background: #00f3ff; }
+        .color-option.pink { background: #ff00e6; }
+        .color-option.purple { background: #b300ff; }
+        .color-option.green { background: #00ff88; }
+        .color-option.yellow { background: #ffcc00; }
+        .color-option.blue { background: #3B82F6; }
+        .color-option.red { background: #EF4444; }
+
+        .shape-option, .style-option, .bg-option, .theme-option, .anim-option, .font-option, .glow-option {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--text);
+            transition: all 0.1s;
+        }
+        
+        .shape-option:active, .style-option:active, .bg-option:active, 
+        .theme-option:active, .anim-option:active, .font-option:active, 
+        .glow-option:active, .btn:active {
+            transform: scale(0.96);
+        }
+
+        .shape-option.active, .style-option.active, .bg-option.active, .theme-option.active, 
+        .anim-option.active, .font-option.active, .glow-option.active {
+            background: linear-gradient(95deg, var(--accent), var(--neon-purple));
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 calc(10px * var(--glow-intensity)) var(--accent);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(13, 13, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--accent);
+            position: sticky;
+            top: 85px;
+            z-index: 99;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 0 8px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 14px 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            min-width: 80px;
+        }
+
+        .nav-tab.active {
+            color: var(--accent);
+            border-bottom: 3px solid var(--accent);
+            text-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            padding: var(--spacing);
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(13, 13, 26, 0.9);
+            border: 1px solid var(--accent);
+            border-radius: 40px;
+            color: var(--text);
+            font-size: 14px;
+            transition: all var(--transition-speed);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent);
+            border-color: var(--accent);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 16px 0;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 30px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: var(--bg-dark);
+            border-color: var(--accent);
+            box-shadow: 0 0 calc(10px * var(--glow-intensity)) var(--accent);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+            max-height: 55vh;
+            overflow-y: auto;
+            padding: 4px;
+        }
+        
+        .games-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        .games-grid::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+        .games-grid::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(13, 13, 26, 0.9));
+            border: 2px solid rgba(0, 243, 255, 0.4);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            animation: fadeInUp 0.3s ease forwards;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.15), transparent);
+            transition: left 0.5s;
+        }
+
+        .game-card::after {
+            content: "🎮 ВЫБРАТЬ";
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover::after {
+            opacity: 1;
+        }
+
+        .game-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 0 calc(25px * var(--glow-intensity)) rgba(0, 243, 255, 0.4);
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.95), rgba(20, 20, 40, 0.95));
+        }
+
+        .game-name {
+            font-weight: 800;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+        }
+
+        .game-year {
+            font-size: 12px;
+            color: var(--accent-light);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .game-genre {
+            font-size: 11px;
+            color: var(--accent);
+            margin-top: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(0, 243, 255, 0.1);
+            padding: 2px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .requirements-section {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.95), rgba(20, 20, 40, 0.9));
+            border: 1px solid var(--accent);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .game-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--accent-light);
+            margin-bottom: 12px;
+            text-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--accent);
+        }
+
+        .level-buttons {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+        }
+
+        .level-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 30px;
+            color: var(--text-muted);
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .level-btn.active {
+            background: linear-gradient(95deg, var(--accent), var(--neon-purple));
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--accent);
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .req-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            border-left: 3px solid var(--accent);
+            backdrop-filter: blur(5px);
+        }
+
+        .req-label {
+            font-family: 'Orbitron', monospace;
+            font-size: 10px;
+            letter-spacing: 1px;
+            color: var(--accent-light);
+        }
+
+        .req-value {
+            font-weight: 600;
+            font-size: 11px;
+            margin-top: 6px;
+            word-break: break-word;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.1s;
+            border: none;
+            letter-spacing: 1px;
+        }
+        
+        .btn:active {
+            transform: scale(0.96) !important;
+        }
+
+        .btn-primary { background: linear-gradient(95deg, var(--accent), var(--neon-purple)); color: var(--bg-dark); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+        .btn-danger { background: rgba(255, 0, 100, 0.8); color: white; border: 1px solid #ff0066; }
+        .btn-warning { background: rgba(255, 100, 0, 0.8); color: white; border: 1px solid #ff6600; }
+        .btn-success { background: rgba(0, 255, 136, 0.8); color: white; border: 1px solid var(--neon-green); }
+        .btn:hover { transform: scale(0.96); box-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--accent); }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .components-grid {
+                grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            }
+        }
+
+        .comp-card {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.95), rgba(20, 20, 40, 0.9));
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: var(--border-radius);
+            transition: all var(--transition-speed);
+            position: relative;
+            backdrop-filter: blur(5px);
+            box-shadow: var(--card-shadow);
+            z-index: 1;
+        }
+
+        .comp-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 0 calc(25px * var(--glow-intensity)) rgba(0, 243, 255, 0.4);
+            z-index: 1000;
+        }
+
+        .card-menu {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 10001;
+        }
+
+        .card-dots {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            border: 2px solid var(--accent);
+            width: 40px;
+            height: 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            font-weight: bold;
+            position: relative;
+            z-index: 10001;
+            user-select: none;
+        }
+
+        .card-dots:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent);
+            transform: scale(1.1);
+        }
+        
+        .card-dots:active {
+            transform: scale(0.96);
+        }
+
+        .card-dropdown {
+            position: absolute;
+            top: 48px;
+            right: 0;
+            background: rgba(10, 10, 20, 0.99);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 220px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.95), 0 0 30px rgba(0, 243, 255, 0.6);
+            animation: fadeIn 0.15s ease;
+            z-index: 10002 !important;
+            pointer-events: all !important;
+        }
+        
+        .card-dropdown::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card-dropdown::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+        .card-dropdown::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .card-dropdown.open {
+            display: flex !important;
+        }
+
+        .card-dropdown button {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 12px 16px;
+            text-align: left;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.15s;
+            white-space: nowrap;
+            font-weight: 500;
+            pointer-events: all !important;
+        }
+
+        .card-dropdown button:hover {
+            background: rgba(0, 243, 255, 0.25);
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 calc(15px * var(--glow-intensity)) rgba(0, 243, 255, 0.3);
+            transform: translateX(5px);
+        }
+        
+        .card-dropdown button:active {
+            transform: scale(0.96);
+        }
+
+        .card-dropdown * {
+            pointer-events: all !important;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            padding-right: 70px;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.05), transparent);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .comp-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 1.5px;
+        }
+
+        .comp-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .badge {
+            font-size: 10px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            color: var(--accent-light);
+        }
+
+        .badge-green {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        .badge-red {
+            background: rgba(255, 0, 230, 0.2);
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
+        .card-body {
+            padding: 0 20px 20px;
+            display: none;
+        }
+
+        .card-body.open {
+            display: block;
+        }
+
+        .links-list {
+            list-style: none;
+            margin: 12px 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .links-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .links-list::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+        .links-list::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .link-item {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .link-url-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .link-url {
+            font-size: 11px;
+            color: var(--accent-light);
+            word-break: break-all;
+            text-decoration: none;
+            flex: 1;
+        }
+
+        .link-url:hover {
+            text-decoration: underline;
+        }
+
+        .delete-link {
+            background: rgba(255, 0, 100, 0.8);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            transition: all 0.1s;
+        }
+
+        .delete-link:hover {
+            background: #ff0066;
+            transform: scale(1.1);
+        }
+        
+        .delete-link:active {
+            transform: scale(0.96);
+        }
+
+        .price-input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 12px;
+            border-radius: 40px;
+        }
+
+        .price-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent);
+            padding: 8px 12px;
+            border-radius: 30px;
+            width: 110px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .add-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .link-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent);
+            padding: 12px;
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .link-input::placeholder {
+            color: rgba(136, 153, 170, 0.5);
+            font-size: 12px;
+        }
+
+        .add-btn {
+            background: linear-gradient(95deg, var(--accent), var(--neon-purple));
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--bg-dark);
+            transition: all 0.1s;
+        }
+
+        .add-btn:hover {
+            transform: scale(0.97);
+            box-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--accent);
+        }
+        
+        .add-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Рекламный блок */
+        .ad-container {
+            background: rgba(13, 13, 26, 0.5);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin: 16px 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .ad-label {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
+        }
+
+        /* Донат блок */
+        .donate-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .donate-section h3 {
+            color: #FFD700;
+            margin-bottom: 12px;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .donate-options {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .donate-option {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            color: #FFD700;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-family: 'Orbitron', monospace;
+            font-size: 12px;
+        }
+
+        .donate-option:hover {
+            background: rgba(255, 215, 0, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .donate-option:active {
+            transform: scale(0.96);
+        }
+
+        .social-share {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .share-btn {
+            background: rgba(20, 20, 40, 0.8);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .share-btn:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+        
+        .share-btn:active {
+            transform: scale(0.96);
+        }
+
+        .saves-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .save-card {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.95), rgba(20, 20, 40, 0.9));
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            transition: all var(--transition-speed);
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .save-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) rgba(0, 243, 255, 0.3);
+        }
+
+        .save-info {
+            flex: 1;
+        }
+
+        .save-name {
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .save-date {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .save-game {
+            font-size: 12px;
+            color: var(--accent-light);
+            margin-bottom: 4px;
+        }
+
+        .save-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+        }
+
+        .save-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.99), rgba(20, 20, 40, 0.98));
+            border: 2px solid var(--accent);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 calc(50px * var(--glow-intensity)) rgba(0, 243, 255, 0.5);
+            position: relative;
+            z-index: 100001;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        .modal-content h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            margin-bottom: 18px;
+            color: var(--accent-light);
+            text-shadow: 0 0 calc(8px * var(--glow-intensity)) var(--accent);
+        }
+
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent);
+            border-radius: 30px;
+            color: white;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-content textarea {
+            border-radius: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: linear-gradient(135deg, rgba(13, 13, 26, 0.99), rgba(20, 20, 40, 0.98));
+            border: 2px solid var(--accent);
+            border-left: 4px solid var(--accent);
+            padding: 12px 24px;
+            border-radius: 40px;
+            animation: fadeIn 0.2s ease;
+            text-align: center;
+            box-shadow: 0 0 calc(30px * var(--glow-intensity)) rgba(0, 243, 255, 0.4);
+            pointer-events: auto;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: default;
+            user-select: none;
+        }
+
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            border-top: 2px solid var(--accent);
+            padding: 16px;
+            z-index: 1000000;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 10px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(0, 243, 255, 0.3);
+            margin-top: 20px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 1px;
+        }
+
+        footer a {
+            color: var(--text-muted);
+            margin: 0 8px;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--accent);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(13, 13, 26, 0.8);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .total-price { font-size: 28px; }
+            .settings-dropdown { width: calc(100vw - 32px); right: 16px; left: 16px; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .requirements-grid { grid-template-columns: 1fr; }
+            .toolbar { gap: 6px; }
+            .btn { padding: 8px 12px; font-size: 10px; }
+            .card-dropdown { min-width: 180px; right: auto; left: -140px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 12px; }
+            .nav-tab { font-size: 10px; padding: 10px 4px; }
+            .game-card { min-height: 100px; padding: 14px; }
+            .game-name { font-size: 14px; }
+            .modal-content { padding: 16px; }
+            .card-dropdown { left: -160px; min-width: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="total-area">
+        <div class="total-label">💰 ИТОГОВАЯ ЦЕНА</div>
+        <div class="total-price" id="totalPrice" title="Нажмите, чтобы скопировать сумму">0 <small>₽</small></div>
+    </div>
+    <div class="header-actions">
+        <button class="donate-btn" onclick="window.open('https://www.tbank.ru/cf/5bSXO3bGfxR', '_blank')" title="Поддержать проект">❤️ ПОДДЕРЖАТЬ</button>
+        <button class="settings-btn" id="settingsBtn" title="Настройки">⋮</button>
+    </div>
+</div>
+
+<div class="settings-dropdown" id="settingsMenu">
+    <div class="settings-section">
+        <div class="settings-title">🎨 ЦВЕТОВАЯ СХЕМА</div>
+        <div class="settings-row" id="colorOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">📐 ФОРМА КАРТОЧЕК</div>
+        <div class="settings-row" id="shapeOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">✨ СТИЛЬ КАРТОЧЕК</div>
+        <div class="settings-row" id="styleOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">💫 СВЕЧЕНИЕ</div>
+        <div class="settings-row" id="glowOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">🖼️ ФОН</div>
+        <div class="settings-row" id="bgOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">🌙 ТЕМА</div>
+        <div class="settings-row" id="themeOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">🎬 АНИМАЦИИ</div>
+        <div class="settings-row" id="animOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">🔤 РАЗМЕР ШРИФТА</div>
+        <div class="settings-row" id="fontOptions"></div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">⚡ СКОРОСТЬ АНИМАЦИИ</div>
+        <div class="settings-row">
+            <input type="range" id="animSpeedSlider" min="0.1" max="0.5" step="0.05" value="0.2" style="flex:1">
+        </div>
+    </div>
+    <div class="settings-section">
+        <div class="settings-title">📏 ОТСТУПЫ</div>
+        <div class="settings-row">
+            <input type="range" id="spacingSlider" min="8" max="32" step="2" value="16" style="flex:1">
+        </div>
+    </div>
+    <div class="settings-section">
+        <button class="btn btn-outline" id="clearAllSavesBtn" style="width:100%; margin-bottom:8px;">🗑️ ОЧИСТИТЬ СОХРАНЕНИЯ</button>
+        <button class="btn btn-danger" id="resetSettingsBtn" style="width:100%;">⚠️ СБРОСИТЬ НАСТРОЙКИ</button>
+    </div>
+</div>
+
+<div class="nav-tabs">
+    <button class="nav-tab active" data-tab="games">🎮 ИГРЫ</button>
+    <button class="nav-tab" data-tab="builder">🛠️ КОНСТРУКТОР</button>
+    <button class="nav-tab" data-tab="saves">💾 СОХРАНЕНИЯ</button>
+</div>
+
+<div class="container">
+    <!-- Рекламный блок TeaserNet -->
+    <div class="ad-container" id="teasernet-block">
+        <span class="ad-label">Реклама</span>
+        <div id="teasernet-container"></div>
+    </div>
+
+    <div id="tab-games" class="tab-content active">
+        <div class="search-box">
+            <input type="text" id="gameSearch" class="search-input" placeholder="🔍 ПОИСК ИГР...">
+        </div>
+        <div class="filter-buttons" id="genreFilters"></div>
+        <div class="games-grid" id="gamesGrid"></div>
+        <button class="btn btn-outline" id="addGameBtn" style="width:100%; margin-top:16px;">➕ ДОБАВИТЬ СВОЮ ИГРУ</button>
+    </div>
+
+    <div id="tab-builder" class="tab-content">
+        <div class="requirements-section">
+            <div class="game-title" id="gameTitle">📦 ВЫБЕРИТЕ ИГРУ</div>
+            <div class="level-buttons">
+                <button class="level-btn" data-level="min">МИН</button>
+                <button class="level-btn active" data-level="med">СРЕД</button>
+                <button class="level-btn" data-level="max">МАКС</button>
+            </div>
+            <div class="requirements-grid" id="requirementsGrid"></div>
+        </div>
+
+        <div class="toolbar">
+            <button class="btn btn-primary" id="saveBuildBtn">💾 СОХРАНИТЬ</button>
+            <button class="btn btn-outline" id="newBuildBtn">📦 НОВАЯ ПУСТАЯ</button>
+            <button class="btn btn-outline" id="clearPricesBtn">🗑️ ОЧИСТИТЬ ЦЕНЫ</button>
+            <button class="btn btn-outline" id="addComponentBtn">+ КОМПОНЕНТ</button>
+            <button class="btn btn-warning" id="exportLinksBtn">🔗 ВЫГРУЗИТЬ ССЫЛКИ</button>
+            <button class="btn btn-success" id="exportTextBtn">📄 ЭКСПОРТ ТЕКСТ</button>
+            <button class="btn btn-danger" id="resetAllBtn">♻️ СБРОС ВСЕГО</button>
+            <button class="btn btn-outline" id="exportDataBtn">📤 ЭКСПОРТ JSON</button>
+            <button class="btn btn-outline" id="importDataBtn">📥 ИМПОРТ JSON</button>
+        </div>
+
+        <div class="components-grid" id="componentsGrid"></div>
+        
+        <!-- Социальные кнопки -->
+        <div class="social-share">
+            <span style="color: var(--text-muted); font-size: 12px;">Поделиться:</span>
+            <button class="share-btn" onclick="shareBuild('vk')">VK</button>
+            <button class="share-btn" onclick="shareBuild('telegram')">Telegram</button>
+            <button class="share-btn" onclick="shareBuild('copy')">📋 Копировать</button>
+        </div>
+
+        <!-- Донат секция -->
+        <div class="donate-section">
+            <h3>❤️ Поддержите проект!</h3>
+            <p style="font-size:12px; color: var(--text-muted); margin-bottom:8px;">Конструктор бесплатный. Ваша поддержка помогает развивать проект.</p>
+            <div class="donate-options">
+                <button class="donate-option" onclick="window.open('https://www.tbank.ru/cf/5bSXO3bGfxR', '_blank')">☕ 100 ₽</button>
+                <button class="donate-option" onclick="window.open('https://www.tbank.ru/cf/5bSXO3bGfxR', '_blank')">⭐ 300 ₽</button>
+                <button class="donate-option" onclick="window.open('https://www.tbank.ru/cf/5bSXO3bGfxR', '_blank')">🚀 500 ₽</button>
+                <button class="donate-option" onclick="window.open('https://boosty.to/ВАШ_АККАУНТ', '_blank')">💎 Boosty</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab-saves" class="tab-content">
+        <div class="saves-grid" id="savesGrid"></div>
+    </div>
+</div>
+
+<footer>
+    <div style="margin-bottom: 8px;">
+        <a href="https://t.me/ВАШ_КАНАЛ" target="_blank">📢 Telegram канал</a>
+        <a href="mailto:ВАША_ПОЧТА@gmail.com">📧 Контакты</a>
+    </div>
+    💾 ВСЕ ДАННЫЕ СОХРАНЯЮТСЯ В БРАУЗЕРЕ | v3.0<br>
+    <span style="font-size: 9px;">© 2024 GamePC Builder. Сделано с ❤️</span>
+</footer>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- Модальные окна -->
+<div id="saveModal" class="modal">
+    <div class="modal-content">
+        <h3>💾 СОХРАНИТЬ СБОРКУ</h3>
+        <input type="text" id="saveName" placeholder="Название сборки">
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-outline" id="cancelSaveBtn">ОТМЕНА</button>
+            <button class="btn btn-primary" id="confirmSaveBtn">СОХРАНИТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="gameModal" class="modal">
+    <div class="modal-content">
+        <h3>🎮 ДОБАВИТЬ ИГРУ</h3>
+        <input type="text" id="newGameName" placeholder="Название игры">
+        <input type="text" id="newGameCpu" placeholder="CPU (например: Intel i7-12700K)">
+        <input type="text" id="newGameRam" placeholder="RAM (например: 16 GB)">
+        <input type="text" id="newGameGpu" placeholder="GPU (например: RTX 3080)">
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-outline" id="cancelGameBtn">ОТМЕНА</button>
+            <button class="btn btn-primary" id="confirmGameBtn">ДОБАВИТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="componentModal" class="modal">
+    <div class="modal-content">
+        <h3>➕ НОВЫЙ КОМПОНЕНТ</h3>
+        <input type="text" id="newCompName" placeholder="Название компонента">
+        <input type="text" id="newCompDesc" placeholder="Описание (необязательно)">
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-outline" id="cancelCompBtn">ОТМЕНА</button>
+            <button class="btn btn-primary" id="confirmCompBtn">ДОБАВИТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="importModal" class="modal">
+    <div class="modal-content">
+        <h3>📥 ИМПОРТ ДАННЫХ</h3>
+        <textarea id="importData" rows="6" placeholder='Вставьте JSON данные...'></textarea>
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-outline" id="cancelImportBtn">ОТМЕНА</button>
+            <button class="btn btn-primary" id="confirmImportBtn">ИМПОРТИРОВАТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="editCompModal" class="modal">
+    <div class="modal-content">
+        <h3>✏️ РЕДАКТИРОВАТЬ КОМПОНЕНТ</h3>
+        <input type="text" id="editCompName" placeholder="Название">
+        <input type="text" id="editCompDesc" placeholder="Описание">
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-outline" id="cancelEditBtn">ОТМЕНА</button>
+            <button class="btn btn-primary" id="confirmEditBtn">СОХРАНИТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="exportLinksModal" class="modal">
+    <div class="modal-content">
+        <h3>🔗 ВЫГРУЗКА ССЫЛОК</h3>
+        <div id="exportLinksResult" style="background:rgba(0,0,0,0.5); padding:16px; border-radius:16px; font-size:11px; max-height:300px; overflow:auto;"></div>
+        <div style="display:flex; gap:12px; margin-top:16px;">
+            <button class="btn btn-primary" id="copyLinksBtn">📋 КОПИРОВАТЬ</button>
+            <button class="btn btn-outline" id="closeExportModal">ЗАКРЫТЬ</button>
+        </div>
+    </div>
+</div>
+
+<!-- TeaserNet реклама -->
+<script>
+    (function() {
+        var sc = document.createElement('script');
+        sc.type = 'text/javascript';
+        sc.async = true;
+        sc.src = 'https://widget.teasernet.ru/loader.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(sc, s);
+    })();
+</script>
+
+<script>
+    'use strict';
+
+    // ============ КОНСТАНТЫ ============
+    const FULL_COMPONENTS_LIST = [
+        { key: "cpu", name: "ПРОЦЕССОР" },
+        { key: "cooler", name: "ОХЛАЖДЕНИЕ CPU" },
+        { key: "motherboard", name: "МАТЕРИНСКАЯ ПЛАТА" },
+        { key: "ram", name: "ОПЕРАТИВНАЯ ПАМЯТЬ" },
+        { key: "gpu", name: "ВИДЕОКАРТА" },
+        { key: "ssd", name: "SSD НАКОПИТЕЛЬ" },
+        { key: "hdd", name: "HDD НАКОПИТЕЛЬ" },
+        { key: "psu", name: "БЛОК ПИТАНИЯ" },
+        { key: "case", name: "КОРПУС" },
+        { key: "case_fan", name: "ВЕНТИЛЯТОРЫ" },
+        { key: "os", name: "ОПЕРАЦИОННАЯ СИСТЕМА" }
+    ];
+
+    const GAMES_LIBRARY = [
+        { id: "cyberpunk2077", name: "Cyberpunk 2077", year: "2020", genre: "RPG", storage: "70 GB",
+          min: { cpu: "Intel Core i5-3570K / AMD FX-8310", ram: "8 GB", gpu: "NVIDIA GTX 780" },
+          med: { cpu: "Intel Core i7-4790 / AMD Ryzen 3 3200G", ram: "12 GB", gpu: "NVIDIA GTX 1060" },
+          max: { cpu: "Intel Core i7-12700K", ram: "32 GB", gpu: "NVIDIA RTX 4080" } },
+        { id: "starfield", name: "Starfield", year: "2023", genre: "RPG", storage: "125 GB",
+          min: { cpu: "AMD Ryzen 5 2600X", ram: "16 GB", gpu: "RX 5700" },
+          med: { cpu: "AMD Ryzen 5 3600X", ram: "16 GB", gpu: "RTX 2080" },
+          max: { cpu: "AMD Ryzen 7 7800X3D", ram: "32 GB", gpu: "RTX 4090" } },
+        { id: "baldursgate3", name: "Baldur's Gate 3", year: "2023", genre: "RPG", storage: "150 GB",
+          min: { cpu: "Intel i5-4690", ram: "8 GB", gpu: "GTX 970" },
+          med: { cpu: "Intel i7-8700K", ram: "16 GB", gpu: "RTX 2060" },
+          max: { cpu: "Intel i9-13900K", ram: "32 GB", gpu: "RTX 4080" } },
+        { id: "witcher3", name: "Ведьмак 3: Дикая Охота", year: "2015", genre: "RPG", storage: "50 GB",
+          min: { cpu: "Intel i5-2500K", ram: "6 GB", gpu: "GTX 660" },
+          med: { cpu: "Intel i5-7400", ram: "8 GB", gpu: "GTX 1060" },
+          max: { cpu: "Intel i7-8700K", ram: "16 GB", gpu: "RTX 2060" } },
+        { id: "rdr2", name: "Red Dead Redemption 2", year: "2019", genre: "Action", storage: "150 GB",
+          min: { cpu: "Intel i5-2500K", ram: "8 GB", gpu: "GTX 770" },
+          med: { cpu: "Intel i7-4770K", ram: "12 GB", gpu: "GTX 1060" },
+          max: { cpu: "Intel i9-9900K", ram: "32 GB", gpu: "RTX 2080" } },
+        { id: "cs2", name: "Counter-Strike 2", year: "2023", genre: "Shooter", storage: "60 GB",
+          min: { cpu: "Intel i5-2500K", ram: "8 GB", gpu: "GTX 960" },
+          med: { cpu: "Intel i5-8400", ram: "12 GB", gpu: "GTX 1060" },
+          max: { cpu: "Intel i7-9700K", ram: "16 GB", gpu: "RTX 3060" } },
+        { id: "pubg", name: "PUBG: Battlegrounds", year: "2017", genre: "Battle Royale", storage: "40 GB",
+          min: { cpu: "Intel i5-4430", ram: "8 GB", gpu: "GTX 960" },
+          med: { cpu: "Intel i5-6600K", ram: "16 GB", gpu: "GTX 1060" },
+          max: { cpu: "Intel i7-8700K", ram: "16 GB", gpu: "RTX 2070" } },
+        { id: "hogwarts", name: "Hogwarts Legacy", year: "2023", genre: "RPG", storage: "85 GB",
+          min: { cpu: "Intel i5-8400", ram: "16 GB", gpu: "GTX 1070" },
+          med: { cpu: "Intel i7-8700", ram: "16 GB", gpu: "RTX 2060" },
+          max: { cpu: "Intel i7-12700K", ram: "32 GB", gpu: "RTX 4070" } }
+    ];
+
+    const GENRES = ["RPG", "Action", "Shooter", "Strategy", "Racing", "Simulator", "Battle Royale", "Horror"];
+    const GAME_NAMES = [
+        "The Elder Scrolls VI", "Fallout 5", "Mass Effect 5", "Dragon Age", "Avowed", 
+        "Fable", "Gears 6", "Halo Infinite 2", "Doom Eternal 2", "Borderlands 4",
+        "Assassin's Creed", "Far Cry 7", "Call of Duty", "Battlefield 6", "Crysis 4"
+    ];
+    
+    for (let i = GAMES_LIBRARY.length; i < 200; i++) {
+        const year = 2020 + (i % 5);
+        GAMES_LIBRARY.push({
+            id: `game_${i}`,
+            name: `${GAME_NAMES[i % GAME_NAMES.length]} ${year}`,
+            year: year.toString(),
+            genre: GENRES[i % GENRES.length],
+            storage: `${50 + (i % 150)} GB`,
+            min: { cpu: `Intel i5-${3000 + (i % 1000)}`, ram: `${8 + (i % 16)} GB`, gpu: `GTX ${900 + (i % 500)}` },
+            med: { cpu: `Intel i7-${7000 + (i % 1000)}`, ram: `${12 + (i % 20)} GB`, gpu: `RTX ${2000 + (i % 500)}` },
+            max: { cpu: `Intel i9-${10000 + (i % 1000)}`, ram: `${16 + (i % 16)} GB`, gpu: `RTX ${3000 + (i % 500)}` }
+        });
+    }
+
+    // ============ СОСТОЯНИЕ ============
+    let customGames = [];
+    let components = [];
+    let saves = [];
+    let currentGame = null;
+    let currentLevel = "med";
+    let openStates = {};
+    let editCompId = null;
+    let currentGenreFilter = "all";
+    let activeDropdown = null;
+    let searchTimeout = null;
+
+    // ============ УТИЛИТЫ ============
+    function escapeHtml(text) {
+        if (!text) return "";
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9) + '-' + performance.now().toString(36).substr(2, 5);
+    }
+
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = message;
+        document.getElementById("toastContainer").appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    function closeAllDropdowns() {
+        if (activeDropdown) {
+            const dropdown = document.getElementById(activeDropdown);
+            if (dropdown) dropdown.classList.remove("open");
+            activeDropdown = null;
+        }
+    }
+
+    function addAffiliateTags(url) {
+        const partners = {
+            'dns-shop.ru': '?partner=ВАШ_ID_DNS',
+            'ozon.ru': '?partner=ВАШ_ID_OZON',
+            'citilink.ru': '?ref=ВАШ_ID_CITILINK',
+            'wildberries.ru': '?partner=ВАШ_ID_WB'
+        };
+        
+        for (const [shop, tag] of Object.entries(partners)) {
+            if (url.includes(shop) && !url.includes('partner=') && !url.includes('ref=')) {
+                return url + (url.includes('?') ? '&' : '?') + tag.replace('?', '');
+            }
+        }
+        return url;
+    }
+
+    // ============ ДАННЫЕ ============
+    function initDefaultComponents() {
+        return FULL_COMPONENTS_LIST.map(tmpl => ({
+            id: generateId(),
+            name: tmpl.name,
+            description: "Новый компонент",
+            requiredFromGame: tmpl.key,
+            links: []
+        }));
+    }
+
+    function loadData() {
+        try {
+            const savedComponents = localStorage.getItem("pc_components");
+            components = savedComponents ? JSON.parse(savedComponents) : null;
+            if (!components || !Array.isArray(components) || components.length === 0) {
+                components = initDefaultComponents();
+            }
+            
+            const savedSaves = localStorage.getItem("pc_saves");
+            saves = savedSaves ? JSON.parse(savedSaves) : [];
+            if (!Array.isArray(saves)) saves = [];
+            
+            const savedCustomGames = localStorage.getItem("pc_custom_games");
+            customGames = savedCustomGames ? JSON.parse(savedCustomGames) : [];
+            if (!Array.isArray(customGames)) customGames = [];
+            
+            const savedCurrentGame = localStorage.getItem("pc_current_game");
+            currentGame = savedCurrentGame ? JSON.parse(savedCurrentGame) : null;
+            
+            currentLevel = localStorage.getItem("pc_current_level") || "med";
+            
+            const savedOpenStates = localStorage.getItem("pc_open_states");
+            if (savedOpenStates) {
+                try { openStates = JSON.parse(savedOpenStates); } catch(e) { openStates = {}; }
+            }
+        } catch (e) {
+            console.error("Ошибка загрузки:", e);
+            components = initDefaultComponents();
+            saves = [];
+            customGames = [];
+            currentGame = null;
+            currentLevel = "med";
+            openStates = {};
+        }
+    }
+
+    function saveToStorage() {
+        try {
+            localStorage.setItem("pc_components", JSON.stringify(components));
+            localStorage.setItem("pc_saves", JSON.stringify(saves));
+            localStorage.setItem("pc_custom_games", JSON.stringify(customGames));
+            localStorage.setItem("pc_current_game", JSON.stringify(currentGame));
+            localStorage.setItem("pc_current_level", currentLevel);
+            localStorage.setItem("pc_open_states", JSON.stringify(openStates));
+        } catch (e) {
+            showToast("❌ ОШИБКА СОХРАНЕНИЯ");
+        }
+    }
+
+    function getAllGames() { return [...GAMES_LIBRARY, ...customGames]; }
+    
+    function getBestPrice(comp) {
+        const prices = comp.links?.map(l => l.price).filter(p => p > 0);
+        return prices?.length ? Math.min(...prices) : null;
+    }
+
+    function calculateTotal() {
+        return components.reduce((total, comp) => total + (getBestPrice(comp) || 0), 0);
+    }
+
+    function updateTotalPrice() {
+        document.getElementById("totalPrice").innerHTML = `${calculateTotal().toLocaleString()} <small>₽</small>`;
+    }
+
+    // ============ ИГРЫ ============
+    function generateComponentsFromGame(gameData, level, oldComponents = null) {
+        const req = gameData.requirements;
+        const levelDescriptions = {
+            cpu: req.cpu || "Мощный процессор",
+            ram: req.ram || "Быстрая память",
+            gpu: req.gpu || "Игровая видеокарта",
+            ssd: (req.storage || "500 GB") + " NVMe SSD",
+            cooler: level === "max" ? "💧 Водяное охлаждение 360mm" : (level === "med" ? "🌀 Башенный кулер" : "❄️ Стоковое охлаждение"),
+            motherboard: level === "max" ? "Z790 / X670E чипсет" : (level === "med" ? "B760 / B650 чипсет" : "H610 / A620 чипсет"),
+            psu: level === "max" ? "850W Gold сертификат" : (level === "med" ? "650W Bronze сертификат" : "500W стандарт"),
+            hdd: "2 TB HDD для хранения игр",
+            os: "Windows 11 Pro / Home"
+        };
+
+        return FULL_COMPONENTS_LIST.map(tmpl => {
+            const existingComp = oldComponents?.find(oc => oc.requiredFromGame === tmpl.key);
+            return {
+                id: existingComp?.id || generateId(),
+                name: tmpl.name,
+                description: levelDescriptions[tmpl.key] || "Игровой компонент",
+                requiredFromGame: tmpl.key,
+                links: existingComp?.links || []
+            };
+        });
+    }
+
+    function selectGame(game) {
+        const levelData = game[currentLevel] || game.min || game.med || game.max;
+        currentGame = {
+            id: game.id, 
+            name: game.name,
+            requirements: { 
+                cpu: levelData.cpu || "Не указан", 
+                ram: levelData.ram || "Не указана", 
+                gpu: levelData.gpu || "Не указана", 
+                storage: game.storage || "Зависит от игры", 
+                os: levelData.os || "Windows 10/11" 
+            }
+        };
+        
+        const oldComponentsMap = new Map(components.map(c => [c.requiredFromGame || c.name, c.links]));
+        components = generateComponentsFromGame(currentGame, currentLevel, components);
+        
+        components.forEach(comp => {
+            const key = comp.requiredFromGame || comp.name;
+            if (oldComponentsMap.has(key)) {
+                comp.links = oldComponentsMap.get(key) || [];
+            }
+        });
+        
+        saveToStorage();
+        renderGameSection(); 
+        renderComponents(); 
+        updateTotalPrice();
+        updatePageTitle(game.name);
+        showToast(`🎮 ВЫБРАНА ИГРА: ${game.name}`);
+        switchTab("builder");
+    }
+
+    function updatePageTitle(gameName) {
+        document.getElementById("pageTitle").textContent = `GamePC Builder — ${gameName} | Сборка ПК`;
+    }
+
+    function changeLevel(level) {
+        if (!currentGame) return;
+        currentLevel = level;
+        const game = getAllGames().find(g => g.id === currentGame.id);
+        if (game) {
+            const levelData = game[level] || game.min;
+            currentGame.requirements = { 
+                cpu: levelData.cpu, 
+                ram: levelData.ram, 
+                gpu: levelData.gpu, 
+                storage: game.storage, 
+                os: "Windows 10/11" 
+            };
+            components = generateComponentsFromGame(currentGame, level, components);
+            saveToStorage();
+            renderGameSection(); 
+            renderComponents(); 
+            updateTotalPrice();
+        }
+        document.querySelectorAll(".level-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.level === level));
+    }
+
+    function addCustomGame() {
+        const name = document.getElementById("newGameName")?.value.trim();
+        if (!name) { showToast("❌ ВВЕДИТЕ НАЗВАНИЕ"); return; }
+        
+        const cpu = document.getElementById("newGameCpu")?.value.trim() || "Intel i5";
+        const ram = document.getElementById("newGameRam")?.value.trim() || "8 GB";
+        const gpu = document.getElementById("newGameGpu")?.value.trim() || "GTX 1060";
+        
+        customGames.push({
+            id: "custom_" + generateId(), 
+            name, 
+            year: new Date().getFullYear().toString(), 
+            genre: "CUSTOM", 
+            storage: "50 GB",
+            min: { cpu, ram, gpu },
+            med: { cpu, ram, gpu },
+            max: { cpu, ram, gpu }
+        });
+        
+        saveToStorage(); 
+        renderGames(); 
+        closeModal("gameModal");
+        
+        document.getElementById("newGameName").value = '';
+        document.getElementById("newGameCpu").value = '';
+        document.getElementById("newGameRam").value = '';
+        document.getElementById("newGameGpu").value = '';
+        
+        showToast(`✅ ИГРА "${name}" ДОБАВЛЕНА`);
+    }
+
+    // ============ КОМПОНЕНТЫ ============
+    function addCustomComponent() {
+        const name = document.getElementById("newCompName")?.value.trim();
+        if (!name) { showToast("❌ ВВЕДИТЕ НАЗВАНИЕ"); return; }
+        components.push({ 
+            id: generateId(), 
+            name, 
+            description: document.getElementById("newCompDesc")?.value || "", 
+            requiredFromGame: null, 
+            links: [] 
+        });
+        saveToStorage(); 
+        renderComponents(); 
+        closeModal("componentModal");
+        showToast("✅ КОМПОНЕНТ ДОБАВЛЕН");
+    }
+
+    function deleteComponent(id) {
+        const comp = components.find(c => c.id === id);
+        if (!comp) return;
+        if (!confirm(`УДАЛИТЬ КОМПОНЕНТ "${comp.name}"?`)) return;
+        components = components.filter(c => c.id !== id);
+        delete openStates[id];
+        saveToStorage(); 
+        renderComponents(); 
+        updateTotalPrice(); 
+        closeAllDropdowns();
+        showToast(`🗑️ "${comp.name}" УДАЛЁН`);
+    }
+
+    function duplicateComponent(id) {
+        const original = components.find(c => c.id === id);
+        if (!original) return;
+        components.push({ 
+            ...JSON.parse(JSON.stringify(original)), 
+            id: generateId(), 
+            name: original.name + " (КОПИЯ)", 
+            requiredFromGame: null 
+        });
+        saveToStorage(); 
+        renderComponents(); 
+        updateTotalPrice(); 
+        closeAllDropdowns();
+        showToast("📋 КОМПОНЕНТ ДУБЛИРОВАН");
+    }
+
+    function addLink(id) {
+        const urlInput = document.getElementById(`url-${id}`);
+        if (!urlInput) return;
+        
+        let url = urlInput.value.trim();
+        if (!url) { showToast("❌ ВВЕДИТЕ ССЫЛКУ"); return; }
+        
+        if (!url.match(/^https?:\/\//i)) {
+            if (url.match(/^[\w-]+(\.[\w-]+)+/)) {
+                url = 'https://' + url;
+            } else {
+                showToast("❌ НЕКОРРЕКТНЫЙ URL");
+                return;
+            }
+        }
+        
+        // Добавляем партнерские метки
+        url = addAffiliateTags(url);
+        
+        const comp = components.find(c => c.id === id);
+        if (comp) {
+            const exists = comp.links.some(l => l.url === url);
+            if (exists) {
+                showToast("⚠️ ТАКАЯ ССЫЛКА УЖЕ ЕСТЬ");
+                return;
+            }
+            
+            comp.links.push({ url, price: null });
+            urlInput.value = '';
+            saveToStorage(); 
+            renderComponents(); 
+            updateTotalPrice();
+            showToast("✅ ССЫЛКА ДОБАВЛЕНА");
+        }
+    }
+
+    function updatePrice(id, idx, val) {
+        const comp = components.find(c => c.id === id);
+        if (comp && comp.links[idx]) { 
+            comp.links[idx].price = parseInt(val) || null; 
+            saveToStorage(); 
+            updateTotalPrice(); 
+        }
+    }
+
+    function deleteLink(id, idx) {
+        const comp = components.find(c => c.id === id);
+        if (comp) { 
+            comp.links.splice(idx, 1); 
+            saveToStorage(); 
+            renderComponents(); 
+            updateTotalPrice(); 
+        }
+    }
+
+    function createEmptyBuild() {
+        if (!confirm("СОЗДАТЬ НОВУЮ ПУСТУЮ СБОРКУ?")) return;
+        currentGame = null; 
+        components = initDefaultComponents(); 
+        openStates = {};
+        saveToStorage(); 
+        renderGameSection(); 
+        renderComponents(); 
+        updateTotalPrice();
+        updatePageTitle("Свободная сборка");
+        showToast("📦 ПУСТАЯ СБОРКА СОЗДАНА");
+    }
+
+    function clearAllPrices() {
+        if (!confirm("ОЧИСТИТЬ ВСЕ ЦЕНЫ И ССЫЛКИ?")) return;
+        components.forEach(c => c.links = []); 
+        openStates = {};
+        saveToStorage(); 
+        renderComponents(); 
+        updateTotalPrice();
+        showToast("✨ ВСЕ ЦЕНЫ ОЧИЩЕНЫ");
+    }
+
+    function resetAll() {
+        if (!confirm("⚠️ ВНИМАНИЕ! ВСЕ ДАННЫЕ БУДУТ БЕЗВОЗВРАТНО УДАЛЕНЫ!")) return;
+        localStorage.clear();
+        components = initDefaultComponents(); 
+        saves = []; 
+        customGames = []; 
+        currentGame = null; 
+        currentLevel = "med"; 
+        openStates = {};
+        saveToStorage(); 
+        renderGames(); 
+        renderGenreFilters();
+        renderGameSection(); 
+        renderComponents(); 
+        renderSaves(); 
+        updateTotalPrice();
+        updatePageTitle("GamePC Builder");
+        document.getElementById("settingsMenu").classList.remove("open");
+        showToast("♻️ ВСЕ ДАННЫЕ СБРОШЕНЫ!");
+    }
+
+    // ============ СОХРАНЕНИЯ ============
+    function saveCurrentBuild(name) {
+        if (!name?.trim()) { showToast("❌ ВВЕДИТЕ НАЗВАНИЕ"); return; }
+        saves.unshift({ 
+            id: Date.now(), 
+            name: name.trim(), 
+            date: new Date().toLocaleString('ru-RU'), 
+            game: currentGame ? { name: currentGame.name, id: currentGame.id, requirements: currentGame.requirements } : null, 
+            level: currentLevel, 
+            components: JSON.parse(JSON.stringify(components)), 
+            totalPrice: calculateTotal() 
+        });
+        if (saves.length > 50) saves = saves.slice(0, 50);
+        saveToStorage(); 
+        renderSaves();
+        showToast(`✅ СБОРКА "${name}" СОХРАНЕНА!`);
+    }
+
+    function loadBuild(save) {
+        if (!confirm(`ЗАГРУЗИТЬ СБОРКУ "${save.name}"?\nТекущие изменения будут потеряны.`)) return;
+        currentGame = save.game ? { 
+            name: save.game.name, 
+            id: save.game.id, 
+            requirements: save.game.requirements || {} 
+        } : null;
+        currentLevel = save.level || "med";
+        components = JSON.parse(JSON.stringify(save.components));
+        
+        if (currentGame && currentGame.id) {
+            const game = getAllGames().find(g => g.id === currentGame.id);
+            if (game) { 
+                const ld = game[currentLevel] || game.min;
+                if (ld) {
+                    currentGame.requirements = { 
+                        cpu: ld.cpu, ram: ld.ram, gpu: ld.gpu, 
+                        storage: game.storage, os: "Windows 10/11" 
+                    }; 
+                }
+            }
+        }
+        
+        openStates = {}; 
+        saveToStorage();
+        renderGameSection(); 
+        renderComponents(); 
+        updateTotalPrice();
+        updatePageTitle(currentGame?.name || "Свободная сборка");
+        switchTab("builder");
+        showToast(`📂 ЗАГРУЖЕНА: ${save.name}`);
+    }
+
+    function deleteBuild(id) {
+        if (!confirm("УДАЛИТЬ?")) return;
+        saves = saves.filter(s => s.id !== id); 
+        saveToStorage(); 
+        renderSaves();
+    }
+
+    // ============ ЭКСПОРТ ============
+    function exportData() {
+        const data = { 
+            version: "3.0", 
+            exportDate: new Date().toISOString(), 
+            components, saves, customGames, currentGame, currentLevel 
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const a = document.createElement("a"); 
+        a.href = URL.createObjectURL(blob); 
+        a.download = `pc_builder_${Date.now()}.json`; 
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast("📤 ЭКСПОРТ ВЫПОЛНЕН");
+    }
+
+    function importData(jsonString) {
+        try {
+            const data = JSON.parse(jsonString);
+            if (data.components) components = data.components;
+            if (data.saves) saves = data.saves;
+            if (data.customGames) customGames = data.customGames;
+            if (data.currentGame) currentGame = data.currentGame;
+            if (data.currentLevel) currentLevel = data.currentLevel;
+            saveToStorage(); 
+            renderComponents(); 
+            renderSaves(); 
+            renderGames(); 
+            renderGameSection(); 
+            updateTotalPrice();
+            updatePageTitle(currentGame?.name || "GamePC Builder");
+            showToast("📥 ИМПОРТ УСПЕШНО ВЫПОЛНЕН");
+        } catch (e) { 
+            showToast("❌ ОШИБКА JSON"); 
+        }
+    }
+
+    function exportLinks() {
+        let text = "🎮 GAMEPC BUILDER - СПИСОК ССЫЛОК\n" + "=".repeat(50) + "\n\n";
+        let totalLinks = 0;
+        components.forEach(comp => {
+            if (comp.links?.length) {
+                text += `📦 ${comp.name}\n${"-".repeat(30)}\n`;
+                comp.links.forEach((link, i) => {
+                    const urlWithTag = addAffiliateTags(link.url);
+                    text += `${i + 1}. ${urlWithTag}${link.price ? ` — ${link.price.toLocaleString()} ₽` : ""}\n`; 
+                    totalLinks++; 
+                });
+                text += "\n";
+            }
+        });
+        text += totalLinks ? `💰 ВСЕГО ССЫЛОК: ${totalLinks}\n💵 ОБЩАЯ СТОИМОСТЬ: ${calculateTotal().toLocaleString()} ₽` : "❌ НЕТ ССЫЛОК";
+        document.getElementById("exportLinksResult").innerHTML = `<pre>${escapeHtml(text)}</pre>`;
+        document.getElementById("exportLinksModal").style.display = "flex";
+    }
+
+    function exportAsText() {
+        let text = "🎮 GAMEPC BUILDER - СБОРКА ИГРОВОГО ПК\n\n";
+        text += `Игра: ${currentGame?.name || 'Свободная сборка'}\n`;
+        text += `Уровень: ${currentLevel.toUpperCase()}\n`;
+        text += `Дата: ${new Date().toLocaleString('ru-RU')}\n\n`;
+        text += `КОМПОНЕНТЫ:\n${"=".repeat(40)}\n`;
+        
+        components.forEach(comp => {
+            const bp = getBestPrice(comp);
+            text += `\n📦 ${comp.name}\n`;
+            if (comp.description) text += `   Описание: ${comp.description}\n`;
+            if (comp.links && comp.links.length > 0) {
+                text += `   Ссылки (${comp.links.length}):\n`;
+                comp.links.forEach((l, i) => {
+                    text += `   ${i + 1}. ${l.url}${l.price ? ` — ${l.price.toLocaleString()} ₽` : ''}\n`;
+                });
+            }
+            if (bp) text += `   Лучшая цена: ${bp.toLocaleString()} ₽\n`;
+        });
+        
+        text += `\n${"=".repeat(40)}\n`;
+        text += `💰 ИТОГО: ${calculateTotal().toLocaleString()} ₽\n`;
+        
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a'); 
+        a.href = URL.createObjectURL(blob); 
+        a.download = `pc-build-${currentGame?.name || 'custom'}-${Date.now()}.txt`; 
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast("📄 ТЕКСТОВЫЙ ФАЙЛ СОХРАНЁН");
+    }
+
+    function shareBuild(platform) {
+        const gameName = currentGame?.name || 'Свободная сборка';
+        const total = calculateTotal().toLocaleString();
+        const url = window.location.href;
+        const text = `🎮 Моя сборка ПК для ${gameName} на GamePC Builder!\n💰 Итого: ${total} ₽\n🔗 Собери свою: ${url}`;
+        
+        const urls = {
+            vk: `https://vk.com/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`,
+            telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
+        };
+        
+        if (platform === 'copy') {
+            navigator.clipboard.writeText(text).then(() => showToast("📋 СКОПИРОВАНО!"));
+            return;
+        }
+        
+        if (urls[platform]) {
+            window.open(urls[platform], '_blank', 'width=600,height=400');
+        }
+    }
+
+    // ============ РЕНДЕРИНГ ============
+    function renderGames() {
+        const search = document.getElementById("gameSearch")?.value.toLowerCase() || "";
+        let games = getAllGames().filter(g => g.name.toLowerCase().includes(search));
+        if (currentGenreFilter !== "all") games = games.filter(g => g.genre === currentGenreFilter);
+        
+        const grid = document.getElementById("gamesGrid");
+        if (!games.length) {
+            grid.innerHTML = '<div class="empty-state">🔍 ИГРЫ НЕ НАЙДЕНЫ</div>';
+            return;
+        }
+        
+        grid.innerHTML = games.map((g, index) => `
+            <div class="game-card" data-game-id="${g.id}" style="animation-delay: ${index * 20}ms">
+                <div class="game-name">${escapeHtml(g.name)}</div>
+                <div class="game-year">📅 ${g.year}</div>
+                <div class="game-genre">${g.genre}</div>
+            </div>`).join("");
+        
+        grid.onclick = (e) => {
+            const card = e.target.closest('.game-card');
+            if (!card) return;
+            const gameId = card.dataset.gameId;
+            const game = getAllGames().find(g => g.id === gameId);
+            if (game) selectGame(game);
+        };
+    }
+
+    function renderGenreFilters() {
+        const genres = ["all", ...new Set(GAMES_LIBRARY.map(g => g.genre))];
+        document.getElementById("genreFilters").innerHTML = genres.map(g => 
+            `<button class="filter-btn ${currentGenreFilter === g ? 'active' : ''}" data-genre="${g}">${g === "all" ? "ВСЕ" : g}</button>`
+        ).join("");
+    }
+
+    function renderGameSection() {
+        document.getElementById("gameTitle").innerHTML = currentGame ? `🎮 ${escapeHtml(currentGame.name)}` : "📦 СВОБОДНАЯ СБОРКА";
+        const req = currentGame?.requirements;
+        document.getElementById("requirementsGrid").innerHTML = req ? `
+            <div class="req-item"><div class="req-label">💻 CPU</div><div class="req-value">${escapeHtml(req.cpu)}</div></div>
+            <div class="req-item"><div class="req-label">🧠 RAM</div><div class="req-value">${escapeHtml(req.ram)}</div></div>
+            <div class="req-item"><div class="req-label">🎮 GPU</div><div class="req-value">${escapeHtml(req.gpu)}</div></div>
+            <div class="req-item"><div class="req-label">💾 SSD</div><div class="req-value">${escapeHtml(req.storage)}</div></div>
+            <div class="req-item"><div class="req-label">🖥️ OS</div><div class="req-value">${escapeHtml(req.os || 'Windows 10/11')}</div></div>
+        ` : '<div class="empty-state">⚙️ ВЫБЕРИТЕ ИГРУ ДЛЯ АВТОЗАПОЛНЕНИЯ</div>';
+    }
+
+    function renderComponents() {
+        const grid = document.getElementById("componentsGrid");
+        if (!components.length) {
+            grid.innerHTML = '<div class="empty-state">🛠️ НЕТ КОМПОНЕНТОВ</div>';
+            return;
+        }
+        
+        grid.innerHTML = components.map(comp => {
+            const isOpen = openStates[comp.id];
+            const bestPrice = getBestPrice(comp);
+            return `
+            <div class="comp-card" data-comp-id="${comp.id}">
+                <div class="card-menu">
+                    <button class="card-dots" data-action="menu" data-comp-id="${comp.id}" title="Меню">⋮</button>
+                    <div class="card-dropdown" id="dropdown-${comp.id}">
+                        <button data-action="edit" data-comp-id="${comp.id}">✏️ РЕДАКТИРОВАТЬ</button>
+                        <button data-action="duplicate" data-comp-id="${comp.id}">📋 ДУБЛИРОВАТЬ</button>
+                        <button data-action="delete" data-comp-id="${comp.id}">🗑️ УДАЛИТЬ</button>
+                    </div>
+                </div>
+                <div class="card-header" data-action="toggle" data-comp-id="${comp.id}" style="cursor: pointer;">
+                    <div>
+                        <div class="comp-name">${escapeHtml(comp.name)}</div>
+                        ${comp.description ? `<div class="comp-desc">${escapeHtml(comp.description)}</div>` : ""}
+                        <div class="badge-group">
+                            ${comp.requiredFromGame ? '<span class="badge badge-red">🎯 ИЗ ИГРЫ</span>' : '<span class="badge">🔧 СВОЙ</span>'}
+                            ${bestPrice ? `<span class="badge badge-green">⭐ ${bestPrice.toLocaleString()} ₽</span>` : '<span class="badge">⚠️ НЕТ ЦЕНЫ</span>'}
+                            ${comp.links?.length ? `<span class="badge">🔗 ${comp.links.length}</span>` : ''}
+                        </div>
+                    </div>
+                    <span style="font-size:18px;">${isOpen ? "▼" : "▶"}</span>
+                </div>
+                <div class="card-body ${isOpen ? "open" : ""}">
+                    <ul class="links-list">
+                        ${!comp.links?.length ? '<li class="empty-state" style="padding:20px;">📭 НЕТ ССЫЛОК</li>' : comp.links.map((l, i) => `
+                            <li class="link-item">
+                                <div class="link-url-row">
+                                    <a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer" class="link-url" title="${escapeHtml(l.url)}">${l.url.length > 50 ? l.url.slice(0, 47)+'...' : escapeHtml(l.url)}</a>
+                                    <button class="delete-link" data-action="delete-link" data-comp-id="${comp.id}" data-link-idx="${i}">✕</button>
+                                </div>
+                                <div class="price-input-row">
+                                    <input type="number" placeholder="ЦЕНА" class="price-input" value="${l.price || ''}" 
+                                        data-action="update-price" data-comp-id="${comp.id}" data-link-idx="${i}" min="0" step="1">
+                                    <span>${l.price ? `${l.price.toLocaleString()} ₽` : "НЕ ЗАДАНА"}</span>
+                                </div>
+                            </li>`).join('')}
+                    </ul>
+                    <div class="add-form">
+                        <input type="text" placeholder="🔗 ВСТАВЬТЕ ССЫЛКУ" class="link-input" id="url-${comp.id}"
+                            data-action="add-link-input" data-comp-id="${comp.id}">
+                        <button class="add-btn" data-action="add-link" data-comp-id="${comp.id}">+ ДОБАВИТЬ ССЫЛКУ</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join("");
+        
+        grid.onclick = (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            
+            const action = target.dataset.action;
+            const compId = target.dataset.compId;
+            
+            e.stopPropagation();
+            
+            switch(action) {
+                case 'menu':
+                    e.preventDefault();
+                    toggleCardMenu(compId, e);
+                    break;
+                case 'toggle':
+                    toggleComponent(compId);
+                    break;
+                case 'edit':
+                    openEditModal(compId);
+                    break;
+                case 'duplicate':
+                    duplicateComponent(compId);
+                    break;
+                case 'delete':
+                    deleteComponent(compId);
+                    break;
+                case 'delete-link':
+                    deleteLink(compId, parseInt(target.dataset.linkIdx));
+                    break;
+                case 'add-link':
+                    addLink(compId);
+                    break;
+            }
+        };
+        
+        grid.addEventListener('change', (e) => {
+            if (e.target.dataset.action === 'update-price') {
+                updatePrice(e.target.dataset.compId, parseInt(e.target.dataset.linkIdx), e.target.value);
+            }
+        });
+        
+        grid.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.dataset.action === 'add-link-input') {
+                e.preventDefault();
+                addLink(e.target.dataset.compId);
+            }
+        });
+    }
+
+    function renderSaves() {
+        const grid = document.getElementById("savesGrid");
+        if (!saves.length) {
+            grid.innerHTML = '<div class="empty-state">💾 НЕТ СОХРАНЁННЫХ СБОРОК<br><small style="color: var(--accent-light)">Создайте сборку и сохраните её</small></div>';
+            return;
+        }
+        
+        grid.innerHTML = saves.map(s => `
+            <div class="save-card">
+                <div class="save-info">
+                    <div class="save-name">${escapeHtml(s.name)}</div>
+                    <div class="save-date">📅 ${s.date}</div>
+                    ${s.game ? `<div class="save-game">🎮 ${escapeHtml(s.game.name)} (${s.level?.toUpperCase() || 'MED'})</div>` : '<div class="save-game">📦 Свободная сборка</div>'}
+                    <div class="save-price">💰 ${s.totalPrice?.toLocaleString() || 0} ₽</div>
+                </div>
+                <div class="save-actions">
+                    <button class="btn btn-outline" data-action="load-build" data-save-id="${s.id}" style="flex:1;">📂 ЗАГРУЗИТЬ</button>
+                    <button class="btn btn-danger" data-action="delete-build" data-save-id="${s.id}" style="flex:1;">🗑️ УДАЛИТЬ</button>
+                </div>
+            </div>`).join("");
+        
+        grid.onclick = (e) => {
+            const target = e.target.closest('[data-action]');
+            if (!target) return;
+            
+            const action = target.dataset.action;
+            const saveId = parseInt(target.dataset.saveId);
+            
+            if (action === 'load-build') {
+                const save = saves.find(s => s.id === saveId);
+                if (save) loadBuild(save);
+            } else if (action === 'delete-build') {
+                deleteBuild(saveId);
+            }
+        };
+    }
+
+    function closeModal(id) { 
+        document.getElementById(id).style.display = "none"; 
+    }
+
+    function openEditModal(id) {
+        editCompId = id;
+        const comp = components.find(c => c.id === id);
+        if (comp) { 
+            document.getElementById("editCompName").value = comp.name; 
+            document.getElementById("editCompDesc").value = comp.description || ""; 
+            document.getElementById("editCompModal").style.display = "flex"; 
+        }
+        closeAllDropdowns();
+    }
+
+    function saveEdit() {
+        const comp = components.find(c => c.id === editCompId);
+        if (comp) {
+            const newName = document.getElementById("editCompName").value.trim();
+            if (!newName) { showToast("❌ ВВЕДИТЕ НАЗВАНИЕ"); return; }
+            comp.name = newName; 
+            comp.description = document.getElementById("editCompDesc").value;
+            saveToStorage(); 
+            renderComponents(); 
+            showToast("✅ СОХРАНЕНО");
+        }
+        closeModal("editCompModal");
+    }
+
+    // ============ ТЕМЫ ============
+    const colorSchemes = { 
+        cyan: "#00f3ff", pink: "#ff00e6", purple: "#b300ff", 
+        green: "#00ff88", yellow: "#ffcc00", blue: "#3B82F6", red: "#EF4444" 
+    };
+
+    function applyTheme() {
+        const t = {
+            color: localStorage.getItem("theme_color") || "cyan", 
+            shape: localStorage.getItem("theme_shape") || "soft",
+            fs: localStorage.getItem("font_size") || "medium", 
+            as: localStorage.getItem("anim_speed") || "0.2",
+            sp: localStorage.getItem("spacing") || "16", 
+            style: localStorage.getItem("theme_style") || "flat",
+            bg: localStorage.getItem("theme_bg") || "dark", 
+            mode: localStorage.getItem("theme_mode") || "dark",
+            anim: localStorage.getItem("anim_mode") || "on", 
+            glow: localStorage.getItem("theme_glow") || "normal"
+        };
+        
+        const root = document.documentElement;
+        root.style.setProperty("--accent", colorSchemes[t.color]); 
+        root.style.setProperty("--neon-cyan", colorSchemes[t.color]);
+        
+        const shapes = { sharp: "4px", soft: "16px", round: "60px", pill: "100px" };
+        root.style.setProperty("--border-radius", shapes[t.shape]);
+        
+        const fonts = { small: "12px", medium: "14px", large: "16px", xlarge: "18px" };
+        root.style.setProperty("--font-size-base", fonts[t.fs]);
+        root.style.setProperty("--transition-speed", t.anim === "off" ? "0s" : (t.anim === "reduced" ? "0.1s" : t.as + "s"));
+        root.style.setProperty("--spacing", t.sp + "px");
+        
+        const gi = { none: 0, subtle: 0.5, normal: 1, intense: 1.5 };
+        const gs = { none: 0, subtle: 10, normal: 20, intense: 30 };
+        root.style.setProperty("--glow-intensity", gi[t.glow]); 
+        root.style.setProperty("--glow-spread", gs[t.glow] + "px");
+        
+        const shadows = { 
+            flat: "none", 
+            shadow: `0 8px ${gs[t.glow]}px rgba(0,0,0,0.4)`, 
+            gloss: `0 4px ${gs[t.glow]*0.6}px rgba(0,0,0,0.3)`, 
+            border: "none" 
+        };
+        root.style.setProperty("--card-shadow", shadows[t.style]);
+        
+        if (t.mode === "light") {
+            root.style.setProperty("--bg-dark", "#f0f0f5"); 
+            root.style.setProperty("--bg-card", "#ffffff");
+            root.style.setProperty("--text", "#333"); 
+            root.style.setProperty("--text-muted", "#666");
+        } else {
+            const bgs = { dark: "#0a0a0f", black: "#000", navy: "#0A1128", gray: "#1a1a1a" };
+            root.style.setProperty("--bg-dark", bgs[t.bg] || "#0a0a0f"); 
+            root.style.setProperty("--bg-card", "#0d0d1a");
+            root.style.setProperty("--text", "#fff"); 
+            root.style.setProperty("--text-muted", "#8899aa");
+        }
+    }
+
+    function buildSettingsUI() {
+        const colorContainer = document.getElementById("colorOptions");
+        Object.keys(colorSchemes).forEach(c => {
+            const b = document.createElement("div");
+            b.className = `color-option ${c} ${localStorage.getItem("theme_color") === c ? "active" : ""}`;
+            b.onclick = () => { 
+                localStorage.setItem("theme_color", c); 
+                applyTheme(); 
+                document.querySelectorAll("#colorOptions .color-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            colorContainer.appendChild(b);
+        });
+        
+        [{ k: "sharp", n: "ОСТРЫЕ" }, { k: "soft", n: "МЯГКИЕ" }, { k: "round", n: "КРУГЛЫЕ" }, { k: "pill", n: "КАПСУЛЫ" }].forEach(s => {
+            const b = document.createElement("button"); 
+            b.className = `shape-option ${localStorage.getItem("theme_shape") === s.k ? "active" : ""}`; 
+            b.textContent = s.n;
+            b.onclick = () => { 
+                localStorage.setItem("theme_shape", s.k); 
+                applyTheme(); 
+                document.querySelectorAll("#shapeOptions .shape-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("shapeOptions").appendChild(b);
+        });
+        
+        [{ k: "flat", n: "ПЛОСКИЕ" }, { k: "shadow", n: "С ТЕНЬЮ" }, { k: "gloss", n: "ГЛЯНЕЦ" }, { k: "border", n: "ОБВОДКА" }].forEach(s => {
+            const b = document.createElement("button"); 
+            b.className = `style-option ${localStorage.getItem("theme_style") === s.k ? "active" : ""}`; 
+            b.textContent = s.n;
+            b.onclick = () => { 
+                localStorage.setItem("theme_style", s.k); 
+                applyTheme(); 
+                document.querySelectorAll("#styleOptions .style-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("styleOptions").appendChild(b);
+        });
+        
+        [{ k: "none", n: "БЕЗ" }, { k: "subtle", n: "ЛЁГКОЕ" }, { k: "normal", n: "НОРМ" }, { k: "intense", n: "СИЛЬНОЕ" }].forEach(g => {
+            const b = document.createElement("button"); 
+            b.className = `glow-option ${(localStorage.getItem("theme_glow") || "normal") === g.k ? "active" : ""}`; 
+            b.textContent = g.n;
+            b.onclick = () => { 
+                localStorage.setItem("theme_glow", g.k); 
+                applyTheme(); 
+                document.querySelectorAll("#glowOptions .glow-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("glowOptions").appendChild(b);
+        });
+        
+        [{ k: "dark", n: "ТЁМНЫЙ" }, { k: "black", n: "ЧЁРНЫЙ" }, { k: "navy", n: "СИНИЙ" }, { k: "gray", n: "СЕРЫЙ" }].forEach(bg => {
+            const b = document.createElement("button"); 
+            b.className = `bg-option ${localStorage.getItem("theme_bg") === bg.k ? "active" : ""}`; 
+            b.textContent = bg.n;
+            b.onclick = () => { 
+                localStorage.setItem("theme_bg", bg.k); 
+                applyTheme(); 
+                document.querySelectorAll("#bgOptions .bg-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("bgOptions").appendChild(b);
+        });
+        
+        [{ k: "dark", n: "🌙 ТЁМНАЯ" }, { k: "light", n: "☀️ СВЕТЛАЯ" }].forEach(t => {
+            const b = document.createElement("button"); 
+            b.className = `theme-option ${localStorage.getItem("theme_mode") === t.k ? "active" : ""}`; 
+            b.textContent = t.n;
+            b.onclick = () => { 
+                localStorage.setItem("theme_mode", t.k); 
+                applyTheme(); 
+                document.querySelectorAll("#themeOptions .theme-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("themeOptions").appendChild(b);
+        });
+        
+        [{ k: "on", n: "ВКЛ" }, { k: "off", n: "ВЫКЛ" }, { k: "reduced", n: "УМЕНЬШ." }].forEach(a => {
+            const b = document.createElement("button"); 
+            b.className = `anim-option ${localStorage.getItem("anim_mode") === a.k ? "active" : ""}`; 
+            b.textContent = a.n;
+            b.onclick = () => { 
+                localStorage.setItem("anim_mode", a.k); 
+                applyTheme(); 
+                document.querySelectorAll("#animOptions .anim-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("animOptions").appendChild(b);
+        });
+        
+        [{ k: "small", n: "МАЛ." }, { k: "medium", n: "СР." }, { k: "large", n: "БОЛЬШ." }, { k: "xlarge", n: "ОЧ.БОЛЬШ." }].forEach(f => {
+            const b = document.createElement("button"); 
+            b.className = `font-option ${localStorage.getItem("font_size") === f.k ? "active" : ""}`; 
+            b.textContent = f.n;
+            b.onclick = () => { 
+                localStorage.setItem("font_size", f.k); 
+                applyTheme(); 
+                document.querySelectorAll("#fontOptions .font-option").forEach(x => x.classList.remove("active")); 
+                b.classList.add("active"); 
+            };
+            document.getElementById("fontOptions").appendChild(b);
+        });
+        
+        document.getElementById("animSpeedSlider").value = localStorage.getItem("anim_speed") || "0.2";
+        document.getElementById("spacingSlider").value = localStorage.getItem("spacing") || "16";
+        document.getElementById("animSpeedSlider").oninput = e => { 
+            localStorage.setItem("anim_speed", e.target.value); 
+            applyTheme(); 
+        };
+        document.getElementById("spacingSlider").oninput = e => { 
+            localStorage.setItem("spacing", e.target.value); 
+            applyTheme(); 
+        };
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+        document.getElementById(`tab-${tabId}`).classList.add("active");
+        document.querySelectorAll(".nav-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tabId));
+        if (tabId === "saves") renderSaves();
+        if (tabId === "games") renderGames();
+    }
+
+    function toggleComponent(id) { 
+        openStates[id] = !openStates[id]; 
+        saveToStorage();
+        renderComponents(); 
+    }
+
+    function toggleCardMenu(id, event) {
+        event.stopPropagation();
+        event.preventDefault();
+        
+        const dropdown = document.getElementById(`dropdown-${id}`);
+        if (!dropdown) return;
+        
+        if (activeDropdown && activeDropdown !== `dropdown-${id}`) {
+            const prev = document.getElementById(activeDropdown);
+            if (prev) prev.classList.remove("open");
+        }
+        
+        const isOpen = dropdown.classList.contains("open");
+        if (isOpen) {
+            dropdown.classList.remove("open");
+            activeDropdown = null;
+        } else {
+            dropdown.classList.add("open");
+            activeDropdown = `dropdown-${id}`;
+        }
+    }
+
+    // ============ ИНИЦИАЛИЗАЦИЯ ============
+    function init() {
+        loadData(); 
+        buildSettingsUI(); 
+        applyTheme();
+        renderGames(); 
+        renderGenreFilters(); 
+        renderGameSection(); 
+        renderComponents(); 
+        renderSaves(); 
+        updateTotalPrice();
+        
+        // Установка активного уровня при загрузке
+        document.querySelectorAll(".level-btn").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.level === currentLevel);
+        });
+
+        document.getElementById("totalPrice").onclick = () => {
+            const total = calculateTotal();
+            const text = total > 0 ? `${total.toLocaleString()} ₽` : '0 ₽';
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("📋 СУММА СКОПИРОВАНА: " + text);
+            }).catch(() => {
+                showToast("❌ НЕ УДАЛОСЬ СКОПИРОВАТЬ");
+            });
+        };
+
+        document.getElementById("settingsBtn").onclick = (e) => { 
+            e.stopPropagation(); 
+            const menu = document.getElementById("settingsMenu");
+            menu.classList.toggle("open");
+            if (menu.classList.contains("open")) closeAllDropdowns();
+        };
+        
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest("#settingsBtn") && !e.target.closest("#settingsMenu")) {
+                document.getElementById("settingsMenu").classList.remove("open");
+            }
+            if (!e.target.closest(".card-menu")) closeAllDropdowns();
+        });
+        
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") { 
+                document.querySelectorAll(".modal").forEach(m => m.style.display = "none"); 
+                document.getElementById("settingsMenu").classList.remove("open"); 
+                closeAllDropdowns(); 
+            }
+        });
+
+        document.getElementById("saveBuildBtn").onclick = () => document.getElementById("saveModal").style.display = "flex";
+        document.getElementById("confirmSaveBtn").onclick = () => { 
+            const n = document.getElementById("saveName").value.trim(); 
+            if (n) saveCurrentBuild(n); 
+            closeModal("saveModal"); 
+        };
+        document.getElementById("cancelSaveBtn").onclick = () => closeModal("saveModal");
+        document.getElementById("newBuildBtn").onclick = createEmptyBuild;
+        document.getElementById("clearPricesBtn").onclick = clearAllPrices;
+        document.getElementById("addComponentBtn").onclick = () => document.getElementById("componentModal").style.display = "flex";
+        document.getElementById("exportLinksBtn").onclick = exportLinks;
+        document.getElementById("exportTextBtn").onclick = exportAsText;
+        document.getElementById("resetAllBtn").onclick = resetAll;
+        document.getElementById("exportDataBtn").onclick = exportData;
+        document.getElementById("importDataBtn").onclick = () => document.getElementById("importModal").style.display = "flex";
+        document.getElementById("confirmImportBtn").onclick = () => { 
+            const d = document.getElementById("importData").value; 
+            if (d) importData(d); 
+            closeModal("importModal"); 
+        };
+        document.getElementById("cancelImportBtn").onclick = () => closeModal("importModal");
+        document.getElementById("addGameBtn").onclick = () => document.getElementById("gameModal").style.display = "flex";
+        document.getElementById("confirmGameBtn").onclick = addCustomGame;
+        document.getElementById("cancelGameBtn").onclick = () => closeModal("gameModal");
+        document.getElementById("confirmCompBtn").onclick = addCustomComponent;
+        document.getElementById("cancelCompBtn").onclick = () => closeModal("componentModal");
+        document.getElementById("confirmEditBtn").onclick = saveEdit;
+        document.getElementById("cancelEditBtn").onclick = () => closeModal("editCompModal");
+        document.getElementById("copyLinksBtn").onclick = () => { 
+            navigator.clipboard.writeText(document.querySelector("#exportLinksResult pre")?.textContent || ""); 
+            showToast("📋 СКОПИРОВАНО"); 
+        };
+        document.getElementById("closeExportModal").onclick = () => closeModal("exportLinksModal");
+        document.getElementById("clearAllSavesBtn").onclick = () => { 
+            if (confirm("УДАЛИТЬ?")) { saves = []; saveToStorage(); renderSaves(); } 
+        };
+        document.getElementById("resetSettingsBtn").onclick = () => { 
+            if (confirm("СБРОСИТЬ?")) { 
+                ["theme_color","theme_shape","theme_style","theme_bg","theme_mode","anim_mode","font_size","anim_speed","spacing","theme_glow"].forEach(k => localStorage.removeItem(k)); 
+                applyTheme(); 
+                location.reload(); 
+            } 
+        };
+
+        document.querySelectorAll(".level-btn").forEach(b => b.onclick = () => changeLevel(b.dataset.level));
+        document.querySelectorAll(".nav-tab").forEach(b => b.onclick = () => switchTab(b.dataset.tab));
+        
+        document.getElementById("gameSearch").oninput = () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(renderGames, 150);
+        };
+        
+        document.getElementById("genreFilters").addEventListener("click", e => { 
+            if (e.target.classList.contains("filter-btn")) { 
+                currentGenreFilter = e.target.dataset.genre; 
+                renderGenreFilters(); 
+                renderGames(); 
+            } 
+        });
+        
+        window.onclick = (e) => { 
+            if (e.target.classList.contains("modal")) e.target.style.display = "none";
+        };
+        
+        // ============ ИНИЦИАЛИЗАЦИЯ TEASERNET ============
+        if (window.teasernet) {
+            window.teasernet('render', {
+                container: 'teasernet-container',
+                login: 'ВАШ_ЛОГИН',
+                count: 1,
+                format: 'horizontal'
+            });
+        }
+        
+        const hasVisited = localStorage.getItem("pc_visited");
+        if (!hasVisited) {
+            setTimeout(() => showToast("👋 ДОБРО ПОЖАЛОВАТЬ! ВЫБЕРИТЕ ИГРУ ИЛИ СОЗДАЙТЕ СБОРКУ"), 500);
+            localStorage.setItem("pc_visited", "true");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+</script>
+
+</body>
+</html>
